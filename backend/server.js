@@ -14,11 +14,6 @@ dotenv.config();
 const connectDB = require('./config/db');
 connectDB();
 
-// Import routes
-const userRoutes = require('./routes/userRoutes');
-const messageRoutes = require('./routes/messageRoutes');
-const roomRoutes = require('./routes/roomRoutes');
-
 // Allowed frontend origins
 const allowedOrigins = [
   'http://localhost:5173', // Dev
@@ -29,28 +24,7 @@ const allowedOrigins = [
 const app = express();
 const server = http.createServer(app);
 
-// Setup Socket.IO with CORS
-const io = new Server(server, {
-  cors: {
-    origin: (origin, callback) => {
-      console.log(`🔌 Socket.IO Origin: ${origin}`);
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        console.error(`❌ Socket.IO Blocked by CORS: ${origin}`);
-        callback(new Error("Not allowed by CORS (Socket.IO)"));
-      }
-    },
-    methods: ['GET', 'POST'],
-    credentials: true,
-  },
-});
-
-// Import and initialize socket events
-const socketHandler = require('./socket');
-socketHandler(io); // Mounting all socket logic
-
-// Global CORS middleware for REST APIs
+// CORS 
 app.use(cors({
   origin: (origin, callback) => {
     console.log(`API Origin: ${origin}`);
@@ -66,9 +40,14 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
-// Middleware
+// Middleware before routes
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Import routes
+const userRoutes = require('./routes/userRoutes');
+const messageRoutes = require('./routes/messageRoutes');
+const roomRoutes = require('./routes/roomRoutes');
 
 // API routes
 app.use('/api/users', userRoutes);
@@ -77,13 +56,34 @@ app.use('/api/rooms', roomRoutes);
 
 // Root route
 app.get('/', (req, res) => {
-  res.send(' Socket.io Chat Server is running');
+  res.send('Socket.io Chat Server is running');
 });
+
+// Setup Socket.IO with CORS
+const io = new Server(server, {
+  cors: {
+    origin: (origin, callback) => {
+      console.log(`🔌 Socket.IO Origin: ${origin}`);
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        console.error(`Socket.IO Blocked by CORS: ${origin}`);
+        callback(new Error("Not allowed by CORS (Socket.IO)"));
+      }
+    },
+    methods: ['GET', 'POST'],
+    credentials: true,
+  },
+});
+
+// Import and initialize socket events
+const socketHandler = require('./socket');
+socketHandler(io); // Mounting all socket logic
 
 // Start server
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
-  console.log(` Server running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
 
 module.exports = { app, server, io };
