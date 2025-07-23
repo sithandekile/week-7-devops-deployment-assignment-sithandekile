@@ -36,18 +36,22 @@ const io = new Server(server, {
 const socketHandler = require('./socket');
 socketHandler(io); // Mounting all socket logic
 
-const allowedOrigins=['http://localhost:5173',
-  'https://my-socket-io-lve-chat.vercel.app'
-]
-// Middleware
+const allowedOrigins = [
+  'http://localhost:5173',//local
+  'https://my-socket-io-lve-chat.vercel.app'  //prod
+];
+//middlewares
 app.use(cors({
-  origin:(origin,cb)=>{
-    if(!origin || allowedOrigins.includes(origin))
-      return cb (null,true);
+  origin: (origin, cb) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      cb(null, true);
+    } else {
+      cb(new Error("Not allowed by CORS"));
+    }
   },
-  credentials:true,
-  methods:'GET,POST,PUT,DELETE',
-  allowedHeaders:'content-Type,Authorization',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'] 
 }));
 
 app.use(express.json());
