@@ -10,7 +10,7 @@ const Login = () => {
   const handleLogin = () => {
     if (input.trim()) {
       setUsername(input.trim());
-      navigate('/rooms');
+      navigate('/home');
     }
   };
 

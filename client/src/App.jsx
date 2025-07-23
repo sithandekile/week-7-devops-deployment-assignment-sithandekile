@@ -10,7 +10,7 @@ import Chat from './pages/chat';
 const App = () => (
   <UserProvider>
     <Router>
-      <div className="min-h-screen bg-sky-500 flex flex-col">
+      <div className="min-h-screen bg-blue-200 flex flex-col">
         <main className="flex-grow container mx-auto px-4 py-8">
           <Routes>
             <Route path="/" element={<Login />} />
