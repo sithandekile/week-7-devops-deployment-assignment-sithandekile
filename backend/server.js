@@ -37,7 +37,7 @@ const socketHandler = require('./socket');
 socketHandler(io); // Mounting all socket logic
 
 const allowedOrigins=['http://localhost:5173',
-  'https:'
+  'https://my-socket-io-lve-chat.vercel.app/rooms'
 ]
 // Middleware
 app.use(cors({
