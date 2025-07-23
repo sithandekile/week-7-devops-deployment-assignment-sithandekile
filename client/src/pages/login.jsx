@@ -15,7 +15,7 @@ const Login = () => {
   };
 
   return (
-    <div className="text-center mt-30">
+    <div className="text-center mt-10">
       <h2>Enter your username</h2>
       <input
         type="text"

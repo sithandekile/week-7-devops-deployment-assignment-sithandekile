@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 const Home = () => {
   return(
-  <div className='mt-10 text-center bg-orange-200'>
+  <div className='mt-10 text-center '>
     <h1>Welcome to Socket.io Chat App</h1>
     <p>Real-time messaging, rooms, private chat, and more!</p>
     <Link to="/rooms">
